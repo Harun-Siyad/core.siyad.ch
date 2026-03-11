@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core.siyad.ch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #222222;
+      --accent: #c8f135;
+      --accent2: #ff4d6d;
+      --text: #e8e8e0;
+      --muted: #555550;
+      --card: #141414;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+      color: var(--accent);
+    }
+
+    .nav-logo span { color: var(--text); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 40px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(200,241,53,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(52px, 8vw, 110px);
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 48px;
+      max-width: 900px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero h1 .strike {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .yap-block {
+      max-width: 560px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .yap-item {
+      border-left: 2px solid var(--border);
+      padding-left: 16px;
+    }
+
+    .yap-item h3 {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .yap-item p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 14px 28px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-primary:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--accent2);
+    }
+
+    .btn-ghost {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 40px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .scroll-indicator::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--muted);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% { transform: scaleX(1); transform-origin: left; }
+      50% { transform: scaleX(0.3); transform-origin: left; }
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-wrap {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      background: var(--surface);
+    }
+
+    .marquee-inner {
+      display: inline-flex;
+      gap: 0;
+      animation: marquee 20s linear infinite;
+    }
+
+    .marquee-inner span {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 32px;
+    }
+
+    .marquee-inner span.accent { color: var(--accent); }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ─── SECTION WRAPPER ─── */
+    section {
+      padding: 100px 40px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── TABS SECTION ─── */
+    #team-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 0;
+      margin-bottom: 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      padding: 14px 28px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeUp 0.3s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* About Us */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .about-grid h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.0;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+    }
+
+    .about-grid h2 span { color: var(--accent); }
+
+    .about-grid p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .stat-box {
+      border: 1px solid var(--border);
+      padding: 24px;
+      background: var(--card);
+    }
+
+    .stat-box .num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 42px;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-box .label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Team */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .team-card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .team-card:hover {
+      border-color: var(--accent);
+      transform: translate(-3px, -3px);
+    }
+
+    .team-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-photo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 6px,
+        rgba(255,255,255,0.015) 6px,
+        rgba(255,255,255,0.015) 12px
+      );
+    }
+
+    .team-photo .photo-icon {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--muted);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      z-index: 1;
+    }
+
+    .team-info {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .team-info h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .team-info .role {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .team-info p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Jobs */
+    .jobs-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .job-card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .job-card:hover { border-color: var(--accent); background: rgba(200,241,53,0.03); }
+
+    .job-left { flex: 1; }
+
+    .job-badge {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .job-badge.red { border-color: var(--accent2); color: var(--accent2); }
+
+    .job-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .job-card p {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .job-meta {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .job-meta .salary {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .job-meta .location {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .job-arrow {
+      font-size: 20px;
+      color: var(--border);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .job-card:hover .job-arrow { color: var(--accent); transform: translateX(4px); }
+
+    /* ─── RANDOM SECTION ─── */
+    #random-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .random-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .random-cell {
+      background: var(--bg);
+      padding: 40px 32px;
+      transition: background 0.2s;
+    }
+
+    .random-cell:hover { background: var(--card); }
+
+    .random-cell .num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 48px;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .random-cell h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .random-cell p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    footer p {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 60px 20px 40px; }
+      section { padding: 60px 20px; }
+      .hero h1 { font-size: 48px; letter-spacing: -2px; }
+      .yap-block { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .random-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+      .job-card { flex-wrap: wrap; }
+      .job-meta { text-align: left; }
+      .nav-links { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">core<span>.siyad.ch</span></div>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#team-section" onclick="scrollToTeam(event)">Company</a></li>
+      <li><a href="#random-section">Whatever</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-tag">est. sometime recently</p>
+    <h1>We build<br/><em>stuff</em> that<br/><span class="strike">might</span> works.</h1>
+
+    <div class="yap-block reveal">
+      <div class="yap-item">
+        <h3>The Vibe</h3>
+        <p>Somewhere between "we have a plan" and "let's figure it out." Mostly the second one if we're honest.</p>
+      </div>
+      <div class="yap-item">
+        <h3>The Mission</h3>
+        <p>To make things that people use, then pretend we planned all of it from the beginning.</p>
+      </div>
+      <div class="yap-item">
+        <h3>The Stack</h3>
+        <p>Whatever works. We've committed to things we regret. We've also invented solutions to non-existent problems.</p>
+      </div>
+      <div class="yap-item">
+        <h3>The Future</h3>
+        <p>Unclear. Exciting. Probably involves more coffee than is medically advisable.</p>
+      </div>
+    </div>
+
+    <div class="hero-cta reveal">
+      <button class="btn-primary" onclick="document.getElementById('team-section').scrollIntoView({behavior:'smooth'})">Meet the Crew →</button>
+      <a href="#random-section" class="btn-ghost">See the rest</a>
+    </div>
+
+    <div class="scroll-indicator">scroll</div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-inner">
+      <span>core.siyad.ch</span>
+      <span class="accent">◆</span>
+      <span>building things</span>
+      <span class="accent">◆</span>
+      <span>occasionally shipping</span>
+      <span class="accent">◆</span>
+      <span>zurich based</span>
+      <span class="accent">◆</span>
+      <span>coffee-powered</span>
+      <span class="accent">◆</span>
+      <span>not a cult</span>
+      <span class="accent">◆</span>
+      <span>core.siyad.ch</span>
+      <span class="accent">◆</span>
+      <span>building things</span>
+      <span class="accent">◆</span>
+      <span>occasionally shipping</span>
+      <span class="accent">◆</span>
+      <span>zurich based</span>
+      <span class="accent">◆</span>
+      <span>coffee-powered</span>
+      <span class="accent">◆</span>
+      <span>not a cult</span>
+      <span class="accent">◆</span>
+    </div>
+  </div>
+
+  <!-- TABS SECTION -->
+  <section id="team-section">
+    <p class="section-label">Company</p>
+
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('about', this)">About Us</button>
+      <button class="tab-btn" onclick="switchTab('team', this)">The Team</button>
+      <button class="tab-btn" onclick="switchTab('jobs', this)">Open Roles</button>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="tab-pane active" id="tab-about">
+      <div class="about-grid">
+        <div>
+          <h2>We're just<br/><span>figuring</span><br/>it out.</h2>
+          <p>core.siyad.ch started as a napkin sketch that somehow became real. We're a small crew that likes building things — occasionally on purpose, sometimes by accident, always with strong opinions.</p>
+          <p>We believe good work happens when you stop overthinking the process and just start doing. We've been wrong about that at least four times. We're still doing it anyway.</p>
+          <p>Based in Zürich, powered by caffeine, and mildly confused about what exactly our "brand" is. We think that's fine.</p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-box reveal">
+            <div class="num">3</div>
+            <div class="label">people who know what's going on</div>
+          </div>
+          <div class="stat-box reveal">
+            <div class="num">47</div>
+            <div class="label">abandoned side projects</div>
+          </div>
+          <div class="stat-box reveal">
+            <div class="num">∞</div>
+            <div class="label">cups of coffee consumed</div>
+          </div>
+          <div class="stat-box reveal">
+            <div class="num">1</div>
+            <div class="label">working product (so far)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAM -->
+    <div class="tab-pane" id="tab-team">
+      <div class="team-grid">
+
+        <div class="team-card reveal">
+          <div class="team-photo">
+            <div class="photo-icon">👤</div>
+          </div>
+          <div class="team-info">
+            <h3>Siyad</h3>
+            <div class="role">Founder &amp; Chief Everything Officer</div>
+            <p>Started the whole thing. Regrets nothing. Has opinions about everything, especially things that aren't his department.</p>
+          </div>
+        </div>
+
+        <div class="team-card reveal">
+          <div class="team-photo">
+            <div class="photo-icon">👤</div>
+          </div>
+          <div class="team-info">
+            <h3>Mara V.</h3>
+            <div class="role">Lead Engineer</div>
+            <p>Writes code that actually works. Silently judges everyone's pull requests. Drinks tea, not coffee (controversial).</p>
+          </div>
+        </div>
+
+        <div class="team-card reveal">
+          <div class="team-photo">
+            <div class="photo-icon">👤</div>
+          </div>
+          <div class="team-info">
+            <h3>Jonas K.</h3>
+            <div class="role">Design &amp; Vibes</div>
+            <p>Makes things look intentional. Has 14 different shades of the same color saved and considers this totally normal.</p>
+          </div>
+        </div>
+
+        <div class="team-card reveal">
+          <div class="team-photo">
+            <div class="photo-icon">👤</div>
+          </div>
+          <div class="team-info">
+            <h3>Lena B.</h3>
+            <div class="role">Operations &amp; Chaos Wrangler</div>
+            <p>Makes sure things actually happen. The only person in the building with a calendar that works. We owe her enormously.</p>
+          </div>
+        </div>
+
+        <div class="team-card reveal">
+          <div class="team-photo">
+            <div class="photo-icon">👤</div>
+          </div>
+          <div class="team-info">
+            <h3>Rex</h3>
+            <div class="role">Chief Morale Officer</div>
+            <p>The office dog. Does not code. Contributes meaningfully to team wellbeing. Earns his salary in emotional support.</p>
+          </div>
+        </div>
+
+        <div class="team-card reveal" style="border-style: dashed; opacity: 0.5;">
+          <div class="team-photo" style="background: transparent;">
+            <div class="photo-icon" style="border-style: dashed;">?</div>
+          </div>
+          <div class="team-info">
+            <h3>You?</h3>
+            <div class="role">TBD</div>
+            <p>We're looking for someone. Not sure exactly who yet. But probably you. Check the Jobs tab.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- JOBS -->
+    <div class="tab-pane" id="tab-jobs">
+      <div class="jobs-list">
+
+        <div class="job-card reveal">
+          <div class="job-left">
+            <span class="job-badge">Full-time</span>
+            <h3>Senior Vibes Engineer</h3>
+            <p>You know what good looks like. You know what bad feels like. You translate that into decisions somehow. Zürich office, in-person Tuesdays.</p>
+          </div>
+          <div class="job-meta">
+            <div class="salary">CHF 140k</div>
+            <div class="location">Zürich, CH</div>
+          </div>
+          <span class="job-arrow">→</span>
+        </div>
+
+        <div class="job-card reveal">
+          <div class="job-left">
+            <span class="job-badge red">Urgent</span>
+            <h3>Person Who Reads the Docs</h3>
+            <p>Someone needs to actually read documentation before we implement things. Not us. We've tried. It's not working. Help.</p>
+          </div>
+          <div class="job-meta">
+            <div class="salary">CHF 95k</div>
+            <div class="location">Remote / Zürich</div>
+          </div>
+          <span class="job-arrow">→</span>
+        </div>
+
+        <div class="job-card reveal">
+          <div class="job-left">
+            <span class="job-badge">Part-time</span>
+            <h3>Backend Whisperer</h3>
+            <p>The servers make sounds. We don't know what they mean. You do. Ideally you also know what a database index is (we googled it, still confused).</p>
+          </div>
+          <div class="job-meta">
+            <div class="salary">CHF 70k</div>
+            <div class="location">Hybrid</div>
+          </div>
+          <span class="job-arrow">→</span>
+        </div>
+
+        <div class="job-card reveal">
+          <div class="job-left">
+            <span class="job-badge">Internship</span>
+            <h3>Professional Overthinker</h3>
+            <p>We have way too many ideas and not enough people to stress about them properly. 3-month contract, possible extension if you overthink well enough.</p>
+          </div>
+          <div class="job-meta">
+            <div class="salary">CHF 3.5k/mo</div>
+            <div class="location">Zürich, CH</div>
+          </div>
+          <span class="job-arrow">→</span>
+        </div>
+
+        <div class="job-card reveal">
+          <div class="job-left">
+            <span class="job-badge red">Moonshot</span>
+            <h3>Someone Who Can Explain Things</h3>
+            <p>We build things and then cannot explain them to anyone outside our team. You bridge that gap. Yes, this is a real job. We're desperate.</p>
+          </div>
+          <div class="job-meta">
+            <div class="salary">Negotiable</div>
+            <div class="location">Anywhere</div>
+          </div>
+          <span class="job-arrow">→</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RANDOM STUFF SECTION -->
+  <section id="random-section">
+    <p class="section-label">Whatever Else</p>
+    <div class="random-grid">
+      <div class="random-cell reveal">
+        <div class="num">01</div>
+        <h3>We Ship Things</h3>
+        <p>Sometimes late. Occasionally early by accident. Always with a slight feeling that we forgot something important.</p>
+      </div>
+      <div class="random-cell reveal">
+        <div class="num">02</div>
+        <h3>We Have Opinions</h3>
+        <p>About technology. About process. About whether "agile" is actually a good idea. Mostly we just argue and then do whatever seems least bad.</p>
+      </div>
+      <div class="random-cell reveal">
+        <div class="num">03</div>
+        <h3>We Like Weird Problems</h3>
+        <p>If your problem is straightforward, we'll probably solve it fine. But if it's strange and nobody else wants to touch it, now we're interested.</p>
+      </div>
+      <div class="random-cell reveal">
+        <div class="num">04</div>
+        <h3>Based in Zürich</h3>
+        <p>Yes it's expensive. Yes the trains run on time. Yes we are constantly slightly intimidated by how good the infrastructure is here.</p>
+      </div>
+      <div class="random-cell reveal">
+        <div class="num">05</div>
+        <h3>No Buzzwords Policy</h3>
+        <p>We tried to write a "synergistic ecosystem-first digital transformation roadmap" once. It was embarrassing. We don't do that anymore.</p>
+      </div>
+      <div class="random-cell reveal">
+        <div class="num">06</div>
+        <h3>Contact Us Maybe</h3>
+        <p>We have an email. We respond eventually. Usually within a day, sometimes within a week, once after three months (sorry about that one).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">core.siyad.ch</div>
+    <p>© 2025 — All rights reserved. Whatever that means.</p>
+    <p style="font-size:11px; color: var(--muted);">hello@siyad.ch</p>
+  </footer>
+
+  <script>
+    // Tab switching
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function scrollToTeam(e) {
+      e.preventDefault();
+      document.getElementById('team-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav active state on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 100) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === '#' + current || (current === '' && a.getAttribute('href') === '#')) {
+          a.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
