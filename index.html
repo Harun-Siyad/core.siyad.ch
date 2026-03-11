@@ -159,8 +159,6 @@
     .team-info h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 3px; }
     .team-info .role { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
     .team-info p { font-size: 11px; color: var(--muted); line-height: 1.6; }
-
-    /* little disclaimer badge on joke cards */
     .team-info .disclaimer {
       display: inline-block; margin-top: 8px;
       font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
@@ -203,15 +201,62 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 800px) {
-      nav { padding: 0 20px; }
-      .hero, .section { padding: 60px 20px; }
-      .hero h1 { font-size: 44px; letter-spacing: -2px; }
-      .yap-grid { max-width: 100%; }
-      .about-layout { grid-template-columns: 1fr; gap: 40px; }
-      .random-grid { grid-template-columns: 1fr; }
-      footer { padding: 24px 20px; }
-      .job-row { grid-template-columns: 1fr auto; }
+      nav { padding: 0 16px; height: 52px; }
+      .nav-logo { font-size: 14px; }
+      .nav-links a { font-size: 10px; letter-spacing: 1px; padding: 5px 8px; }
+
+      .hero { padding: 48px 16px 40px; min-height: unset; }
+      .hero h1 { font-size: 36px; letter-spacing: -1.5px; margin-bottom: 32px; }
+      .hero-eyebrow { font-size: 10px; margin-bottom: 18px; }
+
+      .yap-grid { max-width: 100%; grid-template-columns: 1fr; }
+      .yap-cell { border-right: none !important; }
+      .yap-cell:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+      .yap-cell:last-child { border-bottom: none; }
+      .yap-cell { padding: 18px 16px; }
+
+      .hero-actions { gap: 14px; }
+      .btn-fill { padding: 11px 20px; font-size: 10px; }
+
+      .section { padding: 48px 16px; }
+      .section-header h2 { font-size: 26px; }
+      .section-header { margin-bottom: 32px; }
+
+      .tab-btn { padding: 10px 14px; font-size: 10px; letter-spacing: 1px; }
+
+      .about-layout { grid-template-columns: 1fr; gap: 32px; }
+      .about-text h3 { font-size: 26px; }
+      .about-text p { font-size: 12px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-box { padding: 16px 14px; }
+      .stat-box .num { font-size: 32px; }
+      .stat-box .lbl { font-size: 9px; }
+
+      .team-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .team-info { padding: 12px 14px; }
+      .team-info h3 { font-size: 13px; }
+      .team-info p { font-size: 10px; }
+
+      .job-row { grid-template-columns: 1fr; gap: 12px; padding: 18px 16px; }
       .job-arrow { display: none; }
+      .job-row h3 { font-size: 15px; }
+      .job-salary { font-size: 15px; }
+
+      .random-grid { grid-template-columns: 1fr 1fr; }
+      .r-cell { padding: 24px 16px; }
+      .r-cell .idx { font-size: 28px; margin-bottom: 10px; }
+      .r-cell h3 { font-size: 14px; }
+      .r-cell p { font-size: 11px; }
+
+      footer { padding: 20px 16px; flex-direction: column; align-items: flex-start; gap: 6px; }
+      footer p { font-size: 10px; }
+    }
+
+    @media (max-width: 400px) {
+      .hero h1 { font-size: 30px; letter-spacing: -1px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .random-grid { grid-template-columns: 1fr; }
+      .nav-links a { font-size: 9px; padding: 4px 6px; }
     }
   </style>
 </head>
@@ -245,9 +290,10 @@
         <h3>Vibecoding</h3>
         <p>We don't write code. We feel it. The vibes dictate the architecture. The energy ships the feature. Trust the process.</p>
       </div>
+      <!-- DIDDY REFERENCE — no name used -->
       <div class="yap-cell">
-        <h3>The Future</h3>
-        <p>Unclear. Exciting. Probably involves more coffee than is medically advisable.</p>
+        <h3>The Parties</h3>
+        <p>We throw events. Attendance is encouraged. Baby oil provided. What happens at the offsite stays at the offsite. You love us.</p>
       </div>
     </div>
 
@@ -284,14 +330,13 @@
       <span class="tag">Zürich, CH</span>
     </div>
 
-    <!-- Team tab is first now -->
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('team', this)">Team</button>
       <button class="tab-btn" onclick="switchTab('about', this)">About Us</button>
       <button class="tab-btn" onclick="switchTab('jobs', this)">Open Roles</button>
     </div>
 
-    <!-- TEAM (now first / default) -->
+    <!-- TEAM -->
     <div class="tab-pane active" id="tab-team">
       <div class="team-grid">
 
@@ -365,7 +410,7 @@
           </div>
         </div>
 
-        <!-- JOKE CARD 1 -->
+        <!-- JOKE CARD 1 — Epstein -->
         <div class="team-card reveal" style="border-color: #ff4d6d44;">
           <div class="team-img-placeholder" style="display:flex; background:#1a0a0a;">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -379,7 +424,7 @@
           </div>
         </div>
 
-        <!-- JOKE CARD 2 -->
+        <!-- JOKE CARD 2 — Diddy -->
         <div class="team-card reveal" style="border-color: #ff4d6d44;">
           <div class="team-img-placeholder" style="display:flex; background:#1a0a0a;">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -483,7 +528,8 @@
       <div class="r-cell reveal"><div class="idx">03</div><h3>Vibecoding Only</h3><p>No Jira tickets. No sprint planning. No standups. Just one dev, a good playlist, and a dangerous amount of conviction.</p></div>
       <div class="r-cell reveal"><div class="idx">04</div><h3>Based in Zürich</h3><p>Yes it's expensive. Yes the trains run on time. Yes we're constantly impressed by the infrastructure.</p></div>
       <div class="r-cell reveal"><div class="idx">05</div><h3>No Buzzwords Policy</h3><p>We tried writing a "synergistic digital transformation roadmap" once. It was embarrassing. Never again.</p></div>
-      <div class="r-cell reveal"><div class="idx">06</div><h3>Contact Us Maybe</h3><p>We have an email. We respond eventually. Usually within a day — once after three months. Sorry about that one.</p></div>
+      <!-- EPSTEIN REFERENCE — no name used -->
+      <div class="r-cell reveal"><div class="idx">06</div><h3>The Island</h3><p>We have a retreat location. Very private. Very exclusive. The client list is sealed. The flights aren't logged. Nobody killed themselves there. Probably.</p></div>
     </div>
   </section>
 
